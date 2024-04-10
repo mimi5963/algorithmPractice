@@ -27,20 +27,20 @@ public class Boj10431 {
 
     }
 
-   private static int getCount(int[] arr){
+    private static int getCount(int[] arr){
         int count =0;
         //오름차순 정렬이 목적이고, 나보다 큰 놈중 작은 놈 앞에 서야해
-       // 그럼 그냥 앞뒤로만 비교하고, 작은놈 찾으면 그놈을 정렬시키면되는겨
-       for(int i=0; i<arr.length;i++){
+        // 그럼 그냥 앞뒤로만 비교하고, 작은놈 찾으면 그놈을 정렬시키면되는겨
+        for(int i=0; i<arr.length;i++){
 
             if(i>0 &&arr[i-1] > arr[i]){
                 int findMinHeightIdx = getIdx(arr,i);
                 count += swapPos(arr,findMinHeightIdx,i);
             }
-       }
+        }
 
         return count;
-   }
+    }
 
     private static int swapPos(int[] arr, int findMinHeightIdx, int k) {
         int cnt = 0;
@@ -64,7 +64,7 @@ public class Boj10431 {
             }
         }
         return result;
-   }
+    }
 
     private static int[] getArray(String[] input) {
 
