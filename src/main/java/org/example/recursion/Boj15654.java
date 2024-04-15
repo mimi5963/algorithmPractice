@@ -52,7 +52,7 @@ public class Boj15654 {
         //근데 그건 전체적인거긴하잖슴? 아 모르겟어
 
 
-        
+
         return;
     }
 
