@@ -113,11 +113,6 @@ public class RecursionPractice {
 
             }
 
-
-
-
-
-
             //다 한다음에 스왑 호출
         }
     }
