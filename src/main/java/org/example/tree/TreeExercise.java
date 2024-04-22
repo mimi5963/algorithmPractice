@@ -1,5 +1,8 @@
 package org.example.tree;
 
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Stack;
 import java.util.function.Consumer;
 
 public class TreeExercise {
@@ -147,16 +150,45 @@ public class TreeExercise {
         //재귀호출 x
         public void levelOrder(){
             //흠
+            Queue<Node>q = new LinkedList<>();
+            Node current = root;
+            while (current != null){
+                   Visit(current);
+            }
 
+        }
+
+        private void Visit(Node current) {
         }
 
         public void iterativePreorder(){
+            if(root != null)return;
+            Stack<Node> s = new Stack<>();
+            s.push(root);
+            while (!s.isEmpty()){
 
+            }
         }
         public void iterativeInorder(){
+            if(root != null)return;
+            Stack<Node> s = new Stack<>();
+            Node current = root;
+            while (current != null || !s.isEmpty()){
 
+            }
         }
         public void iterativePostorder(){
+            if(root != null)return;
+            Stack<Node> s1 = new Stack<>();
+            Stack<Node> s2 = new Stack<>();
+            s1.push(root);
+
+            while (!s1.isEmpty()){
+
+            }
+            while (!s2.isEmpty()){
+
+            }
 
         }
 
