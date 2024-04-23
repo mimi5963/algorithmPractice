@@ -154,6 +154,13 @@ public class TreeExercise {
             Node current = root;
             while (current != null){
                    Visit(current);
+                   if(current.left != null)
+                       q.add(current.left);
+                   if(current.right != null)
+                       q.add(current.right);
+                   if(q.isEmpty())return;
+                   current = q.peek();
+                   q.poll();
             }
 
         }
