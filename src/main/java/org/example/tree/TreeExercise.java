@@ -173,6 +173,15 @@ public class TreeExercise {
             Stack<Node> s = new Stack<>();
             s.push(root);
             while (!s.isEmpty()){
+                    Node current = s.peek();
+                    s.pop();
+                    visit(current);
+
+                    if(current.right != null){
+                        s.push(current.right);
+                    }
+                    if(current.left != null)
+                        s.push(current.left);
 
             }
         }
