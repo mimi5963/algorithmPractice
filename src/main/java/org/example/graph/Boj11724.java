@@ -36,15 +36,30 @@ public class Boj11724 {
         //dfs함 수행
         //끝나서 돌아올꺼아녀? check배열 함 확인
         // 아직 비었어? 안비었어? 그럼 갈겨
-        //그럼 check를 배열말고 다른걸로하면 쫌 빠르지않나.
-        //아하 아니다 dfs를 수행하면서, 수를 저장하자 이게 V랑 같아야 다 돌았으
-        int sum =1;
-        int sub =1;
+
+
+        int sub =0;
         //root도 없네
-        //그러 ㅁ그냥 1부터 하지뭐
-        while(sub != n){
-            
+
+        //check[i] == true 면 그냥 가고 false 면 dfs 한번 쓱 돌아
+        //모두 수행한거면 check가 모두 true여야함
+        //중간에 연결 끊긴거면 또 돌게 되어 있다. 이거 다해봐야 n번 1000임
+        for(int i=1; i<=n;i++){
+            if(check[i])continue;
+            else{
+                sub++;
+                dfs(i);
+            }
         }
 
+        System.out.println(sub);
+    }
+    static void dfs(int node){
+        check[node] = true;
+        for(int i : gr[node]){
+            if(!check[i]){
+                dfs(i);
+            }
+        }
     }
 }
