@@ -28,13 +28,13 @@ public class Boj1194 {
         // 열쇠 갯수 만큼 경우의 수가 있다고 볼까?
         // 오케 괜찮을 것 같음
 
-        //key 갯수대로 했더니 문제 발생 b와 c 1나씩 가진 애들이 서로 진로 방해함 
+        //key 갯수대로 했더니 문제 발생 b와 c 1나씩 가진 애들이 서로 진로 방해함
 
         Scanner sc = new Scanner(System.in);
         n = sc.nextInt();
         m = sc.nextInt();
         board = new char[n+1][m+1];
-        visited = new int[n+1][m+1][7];//키는 총 6개
+        visited = new int[n+1][m+1][22];//키 조합을 확인...
         Queue<Point> q = new LinkedList<>();
         // 배열 초기화
         for(int i=1;i<=n;i++){
@@ -88,9 +88,9 @@ public class Boj1194 {
 
                         //key가 없어서 얻었으면
                         if(now.sb.toString().indexOf(ch) == -1){
-                            visited[nr][nc][now.keys+1] = visited[now.r][now.c][now.keys]+1;
-                            next.keys = now.keys+1;
+                            next.keys = now.keys+(ch-'0');
                             next.sb.append(ch);
+                            visited[nr][nc][next.keys] = visited[now.r][now.c][now.keys]+1;
                             q.offer(next);
                         }else{
                             visited[nr][nc][now.keys] = visited[now.r][now.c][now.keys]+1;
@@ -104,6 +104,9 @@ public class Boj1194 {
 
         System.out.println(-1);
 
+
+        //key수로 만 따지면 안됨.. key 조합을 덧셈으로 표현해서 디멘션을 늘려보자
+        // 21
     }
 
     static class Point{
@@ -116,5 +119,12 @@ public class Boj1194 {
             this.c = c;
             this.keys = keys;
         }
+    }
+
+    static class check{
+        int r;
+        int n;
+        int de;
+
     }
 }
