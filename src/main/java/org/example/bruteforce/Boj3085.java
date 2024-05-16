@@ -2,126 +2,112 @@ package org.example.bruteforce;
 
 import java.io.*;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class Boj3085 {
 
+    static int[] dy = {0,-1,1,0,0};
+    static int[] dx ={0,0,0,-1,1};
+    static int n;
+    static char[][] board;
+
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int n = Integer.parseInt(br.readLine());
-        char[][] carr = new char[n][n];
-        int i=0;
-        while(i<n){
-            String input = br.readLine();
-            //일단 배열 채우고
-            fillArray(carr,input,i,n);
-            i++;
+        Scanner sc = new Scanner(System.in);
+         n = sc.nextInt();
+
+         board = new char[n][n];
+
+        for(int i=0; i<n;i++){
+            String input = sc.next();
+            for(int j=0; j<n;j++){
+                board[i][j] = input.charAt(j);
+            }
         }
 
-        int result = findMaxCandy(carr,n);
+        //bfs로 gkskTLr rkeh rhoscksgdmsrj dkslsrk?
+        //어차피 완탐이니까
+        //함수로 쭉 나열하는 형태로가자
+        int maxLen=1;
+        for(int i=0; i<n;i++){
+            for(int j=0; j<n;j++){
+                int maxCandy = getMaxCandy(i,j);
 
-        System.out.println(result);
+                maxLen = Math.max(maxLen,maxCandy);
+            }
+            if (maxLen == n){break;}
+        }
+
+        System.out.println(maxLen);
+
     }
 
-    private static int findMaxCandy(char[][] carr,int n) {
-        int[] resultRight = new int[4];
-        int[] resultDown = new int[4];
-        //C.P,Z,Y 임
-        //0,1,2,3
-        String color = "CPZY";
+    private static int getMaxCandy(int y, int x){
+        int max=0;
+
+        for(int i=0; i<5;i++){
+            int ny = y+dy[i];
+            int nx = x+dx[i];
+            if(!isBoundary(ny,nx))continue;
+
+            //바운더리 안에 있으면, 좌표 바꾸기
+           swap(y,x,ny,nx);
+
+           int right = 0;
+           int down = 0;
 
 
-        //정리 진행 방향은 오른쪽 (x+), 아님 아래(y+) 동시에 하지말고 나누자
-        // 오른쪽 진행방향일 경우 -> CPZY순서로 찾아 ->
-            //다음문자가 같지 않을 경우
-           // 위(y-)나 아래(y+) 먼저 같은 문자 있는지 검색 없으면 x+ -> 계속진행
-          //  각각 가장 많은 캔디 리턴
-         //y-1,y+1,x+1검사시 n을 넘는지 안넘는지 체크
-        // 아래 진행방향
-        //다음문자가 같지 않을 경우
-        // 양 옆에서 먼저 찾고 (x+,x-), 없으면 진행방향(y+)탐색 가져와서 더하기
+           right = Math.max(right,getMaxRight(y, x));
+           down = Math.max(down,getMaxDown(y, x));
 
-        // 두 경우 모두 진행방향에서 캔디를 가져와서 자리를 바꾼 경우 더 나아갈 수 없음으로 break;
 
-        int cnt = 0;
+            max = Math.max(max, right > down ? right: down);
+           //다시 자리바꾸기
+           swap(y,x,ny,nx);
+        }
+        return max;
+    }
 
-        //한개 문자씩 검색 아 한번밖에 못바꾸지
-        while(cnt < 4) {
-            char ch = color.charAt(cnt);
-            int right = 0;
-            int down = 0;
-
-            //오른쪽 검사
-            for (int y = 0; y < n; y++) {
-                int max=0;
-                boolean swap = false;
-                for(int x=0; x<n ; x++){
-
-                    if(carr[y][x] == ch){
-                        max++;
-                    }else if(carr[y][x] != ch && max >0 && swap==false){
-                        swap = true;
-                        if(y-1 >0 && carr[y-1][x] == ch){
-                            max++;
-                        }else if(y+1 <n && carr[y+1][x] == ch){
-                            max++;
-                        }else {
-                            if(x+1 < n && carr[y][x+1] == ch){
-                                max++;
-                            }
-                            break;
-                        }
-                    }
-                }
-                // 최대 값으로 채워 주기
-                right = right > max ? right:max;
+    private static int getMaxDown(int y, int x) {
+        int cnt =1;
+        int temp=0;
+        for(int i=0; i<n-1;i++){
+            if(board[i][x] == board[i+1][x]){
+                   cnt++;
+            }else{
+                temp = Math.max(temp,cnt);
+                cnt=1;
             }
 
+        }
+        temp = Math.max(temp,cnt);
+        return temp;
+    }
 
-
-            //아래 진행방향 검사
-            for (int x = 0; x < n; x++) {
-                int max=0;
-                boolean swap = false;
-                for(int y=0; y<n ; y++){
-
-                    if(carr[y][x] == ch){
-                        max++;
-                    }else if(carr[y][x] != ch && max >0 && swap==false){
-                        swap = true;
-                        if(x-1 >0 && carr[y][x-1] == ch){
-                            max++;
-                        }else if(x+1 <n && carr[y][x+1] == ch){
-                            max++;
-                        }else {
-                            if(y+1 < n && carr[y+1][x] == ch){
-                                max++;
-                            }
-                            break;
-                        }
-                    }
-                }
-                // 최대 값으로 채워 주기
-                down = down > max ? down:max;
+    private static int getMaxRight(int y, int x) {
+        int cnt =1;
+        int temp=0;
+        for(int i=0; i<n-1;i++){
+            if(board[y][i] == board[y][i+1]){
+                cnt++;
+            }else{
+                temp = Math.max(temp,cnt);
+                cnt=1;
             }
 
-            resultRight[cnt] = right;
-            resultDown[cnt] = down;
-
-            cnt++;
         }
-
-        Arrays.sort(resultRight);
-        Arrays.sort(resultDown);
-
-        return resultRight[3] > resultDown[3] ? resultRight[3]:resultDown[3];
-
+        temp = Math.max(temp,cnt);
+        return temp;
     }
 
-    public static void fillArray(char[][] arr,String input,int i,int n){
-        for(int j=0; j<n;j++){
-            arr[i][j] = input.charAt(j);
-        }
+    private static void swap(int y, int x, int ny, int nx){
+        char temp = board[y][x];
+        board[y][x] = board[ny][nx];
+        board[ny][nx] = temp;
     }
+
+    private static boolean isBoundary(int y, int x){
+        return (x >=0 && x<n) && (y>=0 && y<n);
+    }
+
 }
