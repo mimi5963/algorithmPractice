@@ -1,16 +1,176 @@
 package org.example.bruteforce;
 
-public class Boj14500 {
-    public static void main(String[] args) {
-        //크기가 1*1인 정사각형 여러개 이어,
-        //정사각형은 서로 겹치면 안됨
-        // 도형은 연결되어 있어야 함
-        //정사각형은 변끼리 연결, 꼭짓점끼리 맞닿는 것 x
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
-        //아 이어붙인 결과가
-        //약간 구간합?
-        //이게 회전도 된다고 하니까 그냥
-        // 모양대로 다 따져보면 될 듯
-        //종이랑 펜 필요하다 
+public class Boj14500 {
+    static int[][] board;
+    static int r, c;
+
+    public static void main(String[] args) {
+        //테트로미노
+        // 정사각형은 서로 겹치면 안된다.
+        // 도형은 모두 연결됨
+        // 정사각형은 변끼리 연결, 꼭짓점 연결 x
+        // 모양이 총 5개
+
+
+        Scanner sc = new Scanner(System.in);
+        r = sc.nextInt();
+        c = sc.nextInt();
+        board = new int[r][c];
+
+        //배열 입력 받기
+        for (int i = 0; i < r; i++) {
+            for (int j = 0; j < c; j++) {
+                board[i][j] = sc.nextInt();
+            }
+        }
+
+        //배열을 각 모양을 돌려가면서 최대합 구하면됨
+        // 일단 일자랑 사각형하자
+
+        // 1자는 시작점을 기준으로 무조건 n ~ n+3까지임
+        //
+
+        for(int i=0; i<4; i++){
+
+        }
+
+    }
+
+    static class Point{
+        int r;
+        int c;
+
+        public Point(int r, int c){
+            this.r = r;
+            this.c = c;
+        }
+    }
+
+    abstract static class Shape{
+        List<Point> pointList = new ArrayList<>();
+
+        abstract public void setPoint(int startRow,int startCol);
+        abstract public int decal();
+        abstract public int rotation();
+
+        public boolean isBound(){
+            for (Point point : pointList) {
+                if(point.r < 0 || point.r > r || point.c <0 || point.c > c)return false;
+            }
+            return true;
+        }
+        public int getValue(){
+            int max =0;
+            for (Point point : pointList) {
+                max += board[point.r][point.c];
+            }
+
+            return max;
+        }
+
+
+
+    }
+
+
+    static class Horizon extends Shape{
+
+        @Override
+        public void setPoint(int startRow,int startCol) {
+            if(!super.pointList.isEmpty())pointList.clear();
+            for(int i=0; i<4;i++){
+                Point p1 = new Point(startRow+i,startCol);
+                pointList.add(p1);
+            }
+        }
+
+        @Override
+        public int decal() {
+            return getValue();
+        }
+
+        @Override
+        public int rotation() {
+            int[] dr ={2,1,0,-1};
+            int max=0;
+//            // + - - +   1,2,3,4
+            int minus = 1;
+
+            //4번 반복
+            for(int i=0; i<4; i++){
+                if(i == 0 || i==3){
+                    minus = 1;
+                }else minus =-1;
+
+                //모두 돌리기
+                for(int j=0; j<4;j++){
+                    pointList.get(j).r += (dr[j]*minus);
+                    pointList.get(j).c += (dr[j]*minus);
+                }
+
+                if(!isBound())continue;
+                max = Math.max(max,getValue());
+            }
+
+
+            return max;
+
+
+        }
+    }
+
+    static class Square extends Shape{
+
+        @Override
+        public void setPoint(int startRow, int startCol) {
+            int[] dr = {0,0,1,1};
+            int[] dc = {0,1,1,0};
+
+            if(!super.pointList.isEmpty())pointList.clear();
+
+            for(int i=0; i<4; i++){
+                Point p1 = new Point(startRow+dr[i],startCol+dc[i]);
+                pointList.add(p1);
+            }
+        }
+
+        @Override
+        public int decal() {
+            return getValue();
+        }
+
+        @Override
+        public int rotation() {
+            return getValue();
+        }
+    }
+
+
+    static class sh1 extends Shape{
+
+        @Override
+        public void setPoint(int startRow, int startCol) {
+            int[] dr = {0,1,2,2};
+            int[] dc = {0,0,0,1};
+            if(!super.pointList.isEmpty())pointList.clear();
+            for(int i=0; i<4; i++){
+                Point p1 = new Point(startRow+dr[i],startCol+dc[i]);
+                pointList.add(p1);
+            }
+        }
+
+        @Override
+        public int decal() {
+            return 0;
+        }
+
+        @Override
+        public int rotation() {
+            return 0;
+        }
     }
 }
